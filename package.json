@@ -1,0 +1,21 @@
+{
+  "name": "hr-management-system",
+  "version": "1.0.0",
+  "description": "Full-stack HR Management System",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start",
+    "seed": "cd backend && npm run seed",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "keywords": ["hr", "management", "react", "node", "mongodb"],
+  "author": "Your Name",
+  "license": "MIT"
+}
