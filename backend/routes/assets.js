@@ -159,6 +159,7 @@ router.post('/:id/return', authMiddleware, requireRole(['admin', 'it']), async (
   }
 });
 
+
 // Get my assigned assets
 router.get('/my-assets', authMiddleware, async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { employeesAPI } from "../services/api";
 import "../styles/Employees.css";
@@ -21,7 +21,12 @@ const Employees = () => {
     fetchEmployees();
   }, [currentPage, departmentFilter, statusFilter, searchTerm]);
 
-  const fetchEmployees = async () => {
+  // Reset page on filter change to avoid empty pages
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, departmentFilter, statusFilter]);
+
+  const fetchEmployees = useCallback(async () => {
     try {
       setLoading(true);
       const params = {
@@ -42,11 +47,17 @@ const Employees = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, departmentFilter, statusFilter, searchTerm]);
 
   const handleViewDetails = (employee) => {
     setSelectedEmployee(employee);
     setShowModal(true);
+  };
+
+  // Stub for edit functionality (replace with real logic, e.g., navigation or modal)
+  const handleEdit = (employee) => {
+    console.log("Edit employee:", employee);
+    // Example: navigate(`/employees/edit/${employee.id}`);
   };
 
   const departments = [
@@ -117,8 +128,7 @@ const Employees = () => {
               <div key={employee.id} className="employee-card">
                 <div className="employee-header">
                   <div className="employee-avatar">
-                    {employee.first_name?.[0]}
-                    {employee.last_name?.[0]}
+                    {employee.first_name?.[0]} {employee.last_name?.[0]}
                   </div>
                   <div className="employee-basic-info">
                     <h3>
@@ -138,7 +148,9 @@ const Employees = () => {
                   </div>
                   <div className="detail-item">
                     <span className="label">Department:</span>
-                    <span className="value">{employee.department}</span>
+                    <span className="value">
+                      {employee.department?.name || employee.department || "N/A"}
+                    </span>
                   </div>
                   <div className="detail-item">
                     <span className="label">Email:</span>
@@ -166,7 +178,9 @@ const Employees = () => {
                     View Details
                   </button>
                   {user?.role === "admin" || user?.role === "hr" ? (
-                    <button className="btn-primary">Edit</button>
+                    <button className="btn-primary" onClick={() => handleEdit(employee)}>
+                      Edit
+                    </button>
                   ) : null}
                 </div>
               </div>
@@ -220,8 +234,7 @@ const Employees = () => {
               <div className="employee-profile">
                 <div className="profile-header">
                   <div className="profile-avatar">
-                    {selectedEmployee.first_name?.[0]}
-                    {selectedEmployee.last_name?.[0]}
+                    {selectedEmployee.first_name?.[0]} {selectedEmployee.last_name?.[0]}
                   </div>
                   <div className="profile-info">
                     <h3>
@@ -229,7 +242,7 @@ const Employees = () => {
                     </h3>
                     <p>
                       {selectedEmployee.job_title} •{" "}
-                      {selectedEmployee.department}
+                      {selectedEmployee.department?.name || selectedEmployee.department}
                     </p>
                     <span
                       className={`status-badge status-${selectedEmployee.status}`}
@@ -305,9 +318,10 @@ const Employees = () => {
                       <div className="detail-item">
                         <span className="label">Manager:</span>
                         <span className="value">
-                          {selectedEmployee.manager_first_name
-                            ? `${selectedEmployee.manager_first_name} ${selectedEmployee.manager_last_name}`
-                            : "N/A"}
+                          {selectedEmployee.manager?.name ||
+                           (selectedEmployee.manager_first_name
+                             ? `${selectedEmployee.manager_first_name} ${selectedEmployee.manager_last_name}`
+                             : "N/A")}
                         </span>
                       </div>
                     </div>
@@ -331,7 +345,9 @@ const Employees = () => {
                 Close
               </button>
               {(user?.role === "admin" || user?.role === "hr") && (
-                <button className="btn-primary">Edit Employee</button>
+                <button className="btn-primary" onClick={() => handleEdit(selectedEmployee)}>
+                  Edit Employee
+                </button>
               )}
             </div>
           </div>

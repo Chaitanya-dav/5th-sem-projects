@@ -118,7 +118,7 @@ const seedData = async () => {
       // HR Manager
       {
         email: 'sarah.johnson@company.com',
-        password: 'hr123',
+        password: 'hr@-123',
         role: 'hr',
         employeeData: {
           employeeId: 'EMP1002',
@@ -150,7 +150,7 @@ const seedData = async () => {
       // IT Manager
       {
         email: 'mike.chen@company.com',
-        password: 'it123',
+        password: 'it@-123',
         role: 'manager',
         employeeData: {
           employeeId: 'EMP1003',
@@ -638,7 +638,7 @@ const seedData = async () => {
     // Create leave requests
     const leaveRequests = await Leave.insertMany([
       {
-        employee: johnSmith._id,
+        employee: "Alex",
         leaveType: 'vacation',
         startDate: new Date('2024-01-15'),
         endDate: new Date('2024-01-22'),
@@ -648,7 +648,7 @@ const seedData = async () => {
         comments: 'Enjoy your vacation!'
       },
       {
-        employee: emilyDavis._id,
+        employee: "hanuman",
         leaveType: 'sick',
         startDate: new Date('2024-02-01'),
         endDate: new Date('2024-02-03'),
@@ -657,7 +657,7 @@ const seedData = async () => {
         approvedBy: hrManager._id
       },
       {
-        employee: createdEmployees.find(e => e.firstName === 'Lisa')._id,
+        employee: "sairam",
         leaveType: 'wfh',
         startDate: new Date('2024-02-10'),
         endDate: new Date('2024-02-10'),
@@ -680,8 +680,8 @@ const seedData = async () => {
     
     console.log('\n🔑 Default Login Credentials:');
     console.log('Admin: admin@company.com / admin123');
-    console.log('HR Manager: sarah.johnson@company.com / hr123');
-    console.log('IT Manager: mike.chen@company.com / it123');
+    console.log('HR Manager: sarah.johnson@company.com / hr@-123');
+    console.log('IT Manager: mike.chen@company.com / it@-123');
     console.log('Regular Employee: john.smith@company.com / employee123');
 
     process.exit(0);

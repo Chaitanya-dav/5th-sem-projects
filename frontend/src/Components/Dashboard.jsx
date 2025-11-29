@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import {AuthProvider, useAuth } from "../context/AuthContext";
 import { employeesAPI, attendanceAPI } from "../services/api";
 import "../styles/Dashboard.css";
 
@@ -93,7 +93,7 @@ const Dashboard = () => {
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon employees">👥</div>
+          <div className="stat-icon">👥</div>
           <div className="stat-info">
             <h3>{stats.totalEmployees}</h3>
             <p>Total Employees</p>
@@ -101,7 +101,7 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon attendance">✅</div>
+          <div className="stat-icon">✅</div>
           <div className="stat-info">
             <h3>{stats.presentToday}</h3>
             <p>Present Today</p>
@@ -109,7 +109,7 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon leaves">🏖️</div>
+          <div className="stat-icon">🏖️</div>
           <div className="stat-info">
             <h3>{stats.onLeave}</h3>
             <p>On Leave</p>
@@ -117,7 +117,7 @@ const Dashboard = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon assets">💻</div>
+          <div className="stat-icon">💻</div>
           <div className="stat-info">
             <h3>{stats.activeAssets}</h3>
             <p>Active Assets</p>

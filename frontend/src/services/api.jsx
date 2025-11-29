@@ -70,3 +70,4 @@ export const assetsAPI = {
 };
 
 export default api;
+ 

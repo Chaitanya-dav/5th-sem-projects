@@ -12,10 +12,10 @@ const attendanceSchema = new mongoose.Schema({
   },
   clockIn: {
     type: String, // Store as "HH:MM" format
-    required: true
+    required: false
   },
   clockOut: {
-    type: String // Store as "HH:MM" format
+    type: String // Store as "HH:MM" forma
   },
   totalHours: {
     type: Number,

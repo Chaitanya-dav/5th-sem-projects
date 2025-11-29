@@ -1,35 +1,30 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-
-export const authMiddleware = async (req, res, next) => {
+const user = User;
+export const authMiddleware = (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
-    if (!token) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         success: false,
-        message: 'Access denied. No token provided.'
+        message: "No token provided or invalid format",
       });
     }
 
+    const token = authHeader.split(" ")[1];
+
+    // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // Verify user still exists and is active
-    const user = await User.findById(decoded.userId).select('-password');
-    if (!user || !user.isActive) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token'
-      });
-    }
 
-    req.user = user;
+    // Attach user data to request
+    req.user = decoded;
     next();
-  } catch (error) {
-    console.error('Auth middleware error:', error);
+  } catch (err) {
+    console.error("Auth middleware error:", err.message);
     res.status(401).json({
       success: false,
-      message: 'Invalid token'
+      message: "Invalid or expired token",
     });
   }
 };
@@ -37,7 +32,7 @@ export const authMiddleware = async (req, res, next) => {
 // Role-based authorization middleware
 export const requireRole = (roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.User.role)) {
       return res.status(403).json({
         success: false,
         message: 'Access denied. Insufficient permissions.'
@@ -52,7 +47,7 @@ export const requireOwnershipOrRole = (roles) => {
   return (req, res, next) => {
     const isOwner = req.params.id === req.user.id;
     const hasRole = roles.includes(req.user.role);
-    
+
     if (!isOwner && !hasRole) {
       return res.status(403).json({
         success: false,

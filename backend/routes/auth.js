@@ -1,14 +1,34 @@
 import express from 'express';
-import { body } from 'express-validator';
+import { body, validationResult } from 'express-validator';  // Added validationResult import
 import {
   register,
   login,
   getCurrentUser,
-  updateProfile
+  updateProfile,
+  updateProfilePicture
 } from '../controllers/authController.js';
 import { authMiddleware } from '../middleware/auth.js';
-
+import upload from "../middleware/upload.js";
 const router = express.Router();
+router.put(
+  "/profile-picture",
+  authMiddleware,
+  upload.single("avatar"), // "avatar" = name of form field
+  updateProfilePicture
+);
+
+// Helper middleware to handle validation errors
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed',
+      errors: errors.array()  // Returns an array of error details
+    });
+  }
+  next();  // Proceed to the controller if no errors
+};
 
 // Validation rules
 const registerValidation = [
@@ -24,11 +44,12 @@ const loginValidation = [
 ];
 
 // Public routes
-router.post('/register', registerValidation, register);
-router.post('/login', loginValidation, login);
+router.post('/register', registerValidation, handleValidationErrors, register);
+router.post('/login', loginValidation, handleValidationErrors, login);
 
 // Protected routes
 router.get('/me', authMiddleware, getCurrentUser);
 router.put('/profile', authMiddleware, updateProfile);
 
 export default router;
+

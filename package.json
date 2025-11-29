@@ -15,7 +15,16 @@
   "devDependencies": {
     "concurrently": "^8.2.0"
   },
-  "keywords": ["hr", "management", "react", "node", "mongodb"],
+  "keywords": [
+    "hr",
+    "management",
+    "react",
+    "node",
+    "mongodb"
+  ],
   "author": "Your Name",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "multer": "^2.0.2"
+  }
 }
