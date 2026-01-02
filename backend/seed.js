@@ -103,7 +103,7 @@ const seedData = async () => {
             zipCode: '94105'
           },
           jobTitle: 'System Administrator',
-          department: departments[1]._id, // IT
+          department: 'Information Technology', // IT
           salary: 95000,
           employmentType: 'full_time',
           hireDate: new Date('2020-01-15'),
@@ -135,7 +135,7 @@ const seedData = async () => {
             zipCode: '94107'
           },
           jobTitle: 'HR Manager',
-          department: departments[0]._id, // HR
+          department: 'Human Resources', // HR
           salary: 85000,
           employmentType: 'full_time',
           hireDate: new Date('2019-03-10'),
@@ -167,7 +167,7 @@ const seedData = async () => {
             zipCode: '94102'
           },
           jobTitle: 'IT Manager',
-          department: departments[1]._id, // IT
+          department: 'Information Technology', // IT
           salary: 110000,
           employmentType: 'full_time',
           hireDate: new Date('2018-06-20'),
@@ -199,7 +199,7 @@ const seedData = async () => {
             zipCode: '94108'
           },
           jobTitle: 'Finance Manager',
-          department: departments[2]._id, // Finance
+          department: 'Finance', // Finance
           salary: 105000,
           employmentType: 'full_time',
           hireDate: new Date('2017-09-05'),
@@ -231,7 +231,7 @@ const seedData = async () => {
             zipCode: '94110'
           },
           jobTitle: 'HR Specialist',
-          department: departments[0]._id, // HR
+          department: 'Human Resources', // HR
           manager: null, // Will set after creating employees
           salary: 65000,
           employmentType: 'full_time',
@@ -263,7 +263,7 @@ const seedData = async () => {
             zipCode: '94103'
           },
           jobTitle: 'Software Developer',
-          department: departments[1]._id, // IT
+          department: 'Information Technology', // IT
           manager: null,
           salary: 85000,
           employmentType: 'full_time',
@@ -295,7 +295,7 @@ const seedData = async () => {
             zipCode: '94104'
           },
           jobTitle: 'Financial Analyst',
-          department: departments[2]._id, // Finance
+          department: 'Finance', // Finance
           manager: null,
           salary: 70000,
           employmentType: 'full_time',
@@ -327,7 +327,7 @@ const seedData = async () => {
             zipCode: '94109'
           },
           jobTitle: 'Marketing Specialist',
-          department: departments[3]._id, // Marketing
+          department: 'Marketing', // Marketing
           manager: null,
           salary: 68000,
           employmentType: 'full_time',
@@ -359,7 +359,7 @@ const seedData = async () => {
             zipCode: '94111'
           },
           jobTitle: 'Sales Representative',
-          department: departments[4]._id, // Sales
+          department: 'Sales', // Sales
           manager: null,
           salary: 60000,
           employmentType: 'full_time',
@@ -391,7 +391,7 @@ const seedData = async () => {
             zipCode: '94112'
           },
           jobTitle: 'IT Support Specialist',
-          department: departments[1]._id, // IT
+          department: 'Information Technology', // IT
           manager: null,
           salary: 60000,
           employmentType: 'full_time',
