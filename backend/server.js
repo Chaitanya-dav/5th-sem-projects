@@ -3,7 +3,6 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 
 // Database connection
 import connectDB from './config/database.js';
@@ -15,6 +14,9 @@ import departmentRoutes from './routes/departments.js';
 import attendanceRoutes from './routes/attendance.js';
 import leaveRoutes from './routes/leaves.js';
 import assetRoutes from './routes/assets.js';
+import performanceRoutes from './routes/performance.js';
+import salaryRoutes from './routes/salary.js';
+import dashboardRoutes from './routes/dashboard.js';
 
 dotenv.config();
 
@@ -35,7 +37,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Create uploads directory if it doesn't exist
 import fs from 'fs';
-import { requireRole } from './middleware/auth.js';
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -48,28 +49,30 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/leaves', leaveRoutes);
 app.use('/api/assets', assetRoutes);
+app.use('/api/performance', performanceRoutes);
+app.use('/api/salary', salaryRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
     database: 'MongoDB'
   });
 });
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
-      res.json("Server is running");
-  });
+  res.json({ success: true, message: 'Server is running' });
+});
 
 
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
-    success: false, 
+  res.status(500).json({
+    success: false,
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err.message : {}
   });
@@ -77,9 +80,9 @@ app.use((err, req, res, next) => {
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ 
-    success: false, 
-    message: 'Route not found' 
+  res.status(404).json({
+    success: false,
+    message: 'Route not found'
   });
 });
 

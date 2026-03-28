@@ -7,6 +7,7 @@ import { Asset } from './models/Asset.js';
 import { AssetAssignment } from './models/Asset.js';
 import Attendance from './models/Attendance.js';
 import Leave from './models/Leave.js';
+import Notification from './models/Notification.js';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ const seedData = async () => {
     await AssetAssignment.deleteMany({});
     await Attendance.deleteMany({});
     await Leave.deleteMany({});
+    await Notification.deleteMany({});
     
     console.log('🗑️  Cleared existing data');
 
@@ -81,13 +83,19 @@ const seedData = async () => {
 
     console.log('🏢 Created departments');
 
+    // Build lookup so employee seed data can use readable department names
+    const departmentByName = departments.reduce((acc, dept) => {
+      acc[dept.name] = dept._id;
+      return acc;
+    }, {});
+
     // Create users and employees
     const usersData = [
       // Admin user
       {
         email: 'admin@company.com',
         password: 'admin123',
-        role: 'admin',
+        role: 'ceo',
         employeeData: {
           employeeId: 'EMP1001',
           firstName: 'Alex',
@@ -119,7 +127,7 @@ const seedData = async () => {
       {
         email: 'sarah.johnson@company.com',
         password: 'hr@-123',
-        role: 'hr',
+        role: 'manager',
         employeeData: {
           employeeId: 'EMP1002',
           firstName: 'Sarah',
@@ -375,7 +383,7 @@ const seedData = async () => {
       {
         email: 'kevin.martin@company.com',
         password: 'employee123',
-        role: 'it',
+        role: 'manager',
         employeeData: {
           employeeId: 'EMP1010',
           firstName: 'Kevin',
@@ -413,15 +421,25 @@ const seedData = async () => {
     for (const userData of usersData) {
       // Create user
       const user = new User({
+        firstName: userData.employeeData.firstName,
+        lastName: userData.employeeData.lastName,
         email: userData.email,
         password: userData.password,
-        role: userData.role
+        role: userData.role,
+        phone: userData.employeeData.phone
       });
       await user.save();
 
       // Create employee
-      const employee = new Employee(userData.employeeData);
-      employee.user = user._id;
+      const employeeData = { ...userData.employeeData };
+      if (typeof employeeData.department === 'string') {
+        employeeData.department = departmentByName[employeeData.department];
+      }
+
+      const employee = new Employee({
+        ...employeeData,
+        user: user._id
+      });
       await employee.save();
 
       // Update user with employee reference
@@ -636,9 +654,13 @@ const seedData = async () => {
     console.log('⏰ Created attendance records');
 
     // Create leave requests
+    const ceoEmployee = createdEmployees.find(e => e.firstName === 'Alex');
+    const johnEmployee = createdEmployees.find(e => e.firstName === 'John');
+    const emilyEmployee = createdEmployees.find(e => e.firstName === 'Emily');
+
     const leaveRequests = await Leave.insertMany([
       {
-        employee: "Alex",
+        employee: ceoEmployee?._id,
         leaveType: 'vacation',
         startDate: new Date('2024-01-15'),
         endDate: new Date('2024-01-22'),
@@ -648,7 +670,7 @@ const seedData = async () => {
         comments: 'Enjoy your vacation!'
       },
       {
-        employee: "hanuman",
+        employee: johnEmployee?._id,
         leaveType: 'sick',
         startDate: new Date('2024-02-01'),
         endDate: new Date('2024-02-03'),
@@ -657,7 +679,7 @@ const seedData = async () => {
         approvedBy: hrManager._id
       },
       {
-        employee: "sairam",
+        employee: emilyEmployee?._id,
         leaveType: 'wfh',
         startDate: new Date('2024-02-10'),
         endDate: new Date('2024-02-10'),
@@ -679,9 +701,9 @@ const seedData = async () => {
     console.log(`🏖️ Leave Requests: ${leaveRequests.length}`);
     
     console.log('\n🔑 Default Login Credentials:');
-    console.log('Admin: admin@company.com / admin123');
-    console.log('HR Manager: sarah.johnson@company.com / hr@-123');
-    console.log('IT Manager: mike.chen@company.com / it@-123');
+    console.log('CEO: admin@company.com / admin123');
+    console.log('Manager: sarah.johnson@company.com / hr@-123');
+    console.log('Manager: mike.chen@company.com / it@-123');
     console.log('Regular Employee: john.smith@company.com / employee123');
 
     process.exit(0);

@@ -1,36 +1,37 @@
-import { useState } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./App.css";
-import Home from "./Components/Home.jsx";
-import Login from "./Components/Login.jsx";
-import Dashboard from "./Components/Dashboard.jsx";
-import Employees from "./Components/Employee.jsx";
-import Attendance from "./Components/Attendance.jsx";
-import Leaves from "./Components/Leaves.jsx";
-import { AuthProvider } from "./context/AuthContext.jsx";
-import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './App.css';
+import Home from './Components/Home.jsx';
+import Login from './Components/Login.jsx';
+import Dashboard from './Components/Dashboard.jsx';
+import Employees from './Components/Employee.jsx';
+import Attendance from './Components/Attendance.jsx';
+import Leaves from './Components/Leaves.jsx';
+import Performance from './Components/Performance.jsx';
+import Assets from './Components/Assets.jsx';
+import Salary from './Components/Salary.jsx';
+import ProtectedRoute from './Components/ProtectedRoute.jsx';
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: '/',
       element: <Home />,
-      errorElement: <ErrorBoundary />, // Add this line
+      errorElement: <ErrorBoundary />,
     },
     {
-      path: "/login",
+      path: '/login',
       element: <Login />,
     },
     {
-      path: "/dashboard",
+      path: '/dashboard',
       element: (
         <ProtectedRoute>
           <Dashboard />
-         </ProtectedRoute>
+        </ProtectedRoute>
       ),
     },
     {
-      path: "/employees",
+      path: '/employees',
       element: (
         <ProtectedRoute>
           <Employees />
@@ -38,41 +39,57 @@ function App() {
       ),
     },
     {
-      path: "/attendance",
+      path: '/attendance',
       element: (
         <ProtectedRoute>
           <Attendance />
-       </ProtectedRoute>
+        </ProtectedRoute>
       ),
     },
     {
-      path: "/leaves",
+      path: '/leaves',
       element: (
         <ProtectedRoute>
           <Leaves />
-         </ProtectedRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/performance',
+      element: (
+        <ProtectedRoute>
+          <Performance />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/assets',
+      element: (
+        <ProtectedRoute>
+          <Assets />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/salary',
+      element: (
+        <ProtectedRoute>
+          <Salary />
+        </ProtectedRoute>
       ),
     },
   ]);
 
-  return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
-// Add Error Boundary Component
 function ErrorBoundary() {
   return (
     <div className="error-boundary">
       <div className="error-content">
-        <h1>Oops! Something went wrong</h1>
-        <p>We're sorry, but the page you're looking for cannot be found.</p>
-        <button
-          onClick={() => (window.location.href = "/")}
-          className="btn-primary"
-        >
+        <h1>Page Not Found</h1>
+        <p>The page you are looking for does not exist.</p>
+        <button onClick={() => (window.location.href = '/')} className="btn-primary">
           Go Back Home
         </button>
       </div>
@@ -81,5 +98,3 @@ function ErrorBoundary() {
 }
 
 export default App;
-
-

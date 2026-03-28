@@ -19,9 +19,9 @@ router.get('/', getEmployees);
 router.get('/stats', getEmployeeStats);
 router.get('/:id', getEmployeeById);
 
-// Routes requiring HR or Admin role
-router.post('/', requireRole(['admin', 'hr']), createEmployee);
-router.put('/:id', requireRole(['admin', 'hr']), updateEmployee);
-router.delete('/:id', requireRole(['admin']), deleteEmployee);
+// Hierarchy-aware management routes
+router.post('/', requireRole(['ceo', 'manager']), createEmployee);
+router.put('/:id', requireRole(['ceo', 'manager']), updateEmployee);
+router.delete('/:id', requireRole(['ceo', 'manager']), deleteEmployee);
 
 export default router;

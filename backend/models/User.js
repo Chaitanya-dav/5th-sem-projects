@@ -1,7 +1,18 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { normalizeRole } from '../utils/roles.js';
 
 const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: [true, 'First name is required'],
+    trim: true
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Last name is required'],
+    trim: true
+  },
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -16,8 +27,17 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'hr', 'manager', 'employee', 'it'],
-    default: 'employee'
+    enum: ['ceo', 'manager', 'employee', 'admin', 'hr', 'it'],
+    default: 'employee',
+    set: (value) => normalizeRole(value)
+  },
+  phone: {
+    type: String,
+    trim: true
+  },
+  employee: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Employee'
   },
   isActive: {
     type: Boolean,
@@ -52,6 +72,7 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 userSchema.methods.toJSON = function() {
   const user = this.toObject();
   delete user.password;
+  delete user.__v;
   return user;
 };
 

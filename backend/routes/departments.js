@@ -51,8 +51,8 @@ router.get('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// Create new department (Admin/HR only)
-router.post('/', authMiddleware, requireRole(['admin', 'hr']), async (req, res) => {
+// Create new department (CEO/Manager)
+router.post('/', authMiddleware, requireRole(['ceo', 'manager']), async (req, res) => {
   try {
     const department = new Department(req.body);
     await department.save();
@@ -74,8 +74,8 @@ router.post('/', authMiddleware, requireRole(['admin', 'hr']), async (req, res) 
   }
 });
 
-// Update department (Admin/HR only)
-router.put('/:id', authMiddleware, requireRole(['admin', 'hr']), async (req, res) => {
+// Update department (CEO/Manager)
+router.put('/:id', authMiddleware, requireRole(['ceo', 'manager']), async (req, res) => {
   try {
     const department = await Department.findByIdAndUpdate(
       req.params.id,
