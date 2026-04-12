@@ -27,10 +27,23 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Connect to MongoDB
-connectDB();
+let isConnected = false;
+
+const connectDatabase = async () => {
+  if (isConnected) return;
+
+  await connectDB();
+  isConnected = true;
+};
+
+app.use(async (req, res, next) => {
+  await connectDatabase();
+  next();
+});
+
 
 // Middleware
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -86,9 +99,11 @@ app.use('*', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`🗄️  Database: MongoDB`);
-});
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, '0.0.0.0', () => {
+//   console.log(`🚀 Server running on port ${PORT}`);
+//   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+//   console.log(`🗄️  Database: MongoDB`);
+// });
+
+export default app; 
