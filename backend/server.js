@@ -1,109 +1,73 @@
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
-
-// Database connection
-import connectDB from './config/database.js';
-
-// Routes
-import authRoutes from './routes/auth.js';
-import employeeRoutes from './routes/employees.js';
-import departmentRoutes from './routes/departments.js';
-import attendanceRoutes from './routes/attendance.js';
-import leaveRoutes from './routes/leaves.js';
-import assetRoutes from './routes/assets.js';
-import performanceRoutes from './routes/performance.js';
-import salaryRoutes from './routes/salary.js';
-import dashboardRoutes from './routes/dashboard.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./config/database.js";
 
 dotenv.config();
 
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
 
-// Connect to MongoDB
+// ✅ Safe DB connection (for Vercel)
 let isConnected = false;
 
 const connectDatabase = async () => {
   if (isConnected) return;
-
-  await connectDB();
-  isConnected = true;
+  try {
+    await connectDB();
+    isConnected = true;
+    console.log("✅ DB Connected");
+  } catch (err) {
+    console.error("❌ DB ERROR:", err);
+    throw err;
+  }
 };
 
+// Middleware
+app.use(cors({ origin: "*", credentials: true }));
+app.use(express.json());
+
+// Ensure DB before every request
 app.use(async (req, res, next) => {
   await connectDatabase();
   next();
 });
 
-
-// Middleware
-app.use(cors({ origin: "*", credentials: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Create uploads directory if it doesn't exist
-import fs from 'fs';
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/employees', employeeRoutes);
-app.use('/api/departments', departmentRoutes);
-app.use('/api/attendance', attendanceRoutes);
-app.use('/api/leaves', leaveRoutes);
-app.use('/api/assets', assetRoutes);
-app.use('/api/performance', performanceRoutes);
-app.use('/api/salary', salaryRoutes);
-app.use('/api/dashboard', dashboardRoutes);
+import authRoutes from "./routes/auth.js";
+import employeeRoutes from "./routes/employees.js";
+import departmentRoutes from "./routes/departments.js";
+import attendanceRoutes from "./routes/attendance.js";
+import leaveRoutes from "./routes/leaves.js";
+import assetRoutes from "./routes/assets.js";
+import performanceRoutes from "./routes/performance.js";
+import salaryRoutes from "./routes/salary.js";
+import dashboardRoutes from "./routes/dashboard.js";
+
+app.use("/api/auth", authRoutes);
+app.use("/api/employees", employeeRoutes);
+app.use("/api/departments", departmentRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/leaves", leaveRoutes);
+app.use("/api/assets", assetRoutes);
+app.use("/api/performance", performanceRoutes);
+app.use("/api/salary", salaryRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Health check
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    database: 'MongoDB'
-  });
-});
-app.get('/', (req, res) => {
-  res.json({ success: true, message: 'Server is running' });
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK" });
 });
 
+// Root
+app.get("/", (req, res) => {
+  res.json({ message: "Server running" });
+});
 
-
-// Error handling middleware
+// Error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : {}
-  });
+  console.error(err);
+  res.status(500).json({ error: err.message });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
-});
-
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, '0.0.0.0', () => {
-//   console.log(`🚀 Server running on port ${PORT}`);
-//   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-//   console.log(`🗄️  Database: MongoDB`);
-// });
-
-export default app; 
+// ✅ IMPORTANT (ESM export for Vercel)
+export default app;
