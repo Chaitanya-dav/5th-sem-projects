@@ -24,7 +24,7 @@ const connectDatabase = async () => {
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: [process.env.FRONTEND_URL, process.env.CLIENT_URL],
   credentials: true
 }));
 app.use(express.json());
