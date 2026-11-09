@@ -69,5 +69,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });
 });
 
-// ✅ IMPORTANT (ESM export for Vercel)
-export default app;
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
+});
