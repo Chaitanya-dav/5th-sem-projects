@@ -31,8 +31,12 @@ app.use(express.json());
 
 // Ensure DB before every request
 app.use(async (req, res, next) => {
-  await connectDatabase();
-  next();
+  try {
+    await connectDatabase();
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Routes
