@@ -24,7 +24,7 @@ const connectDatabase = async () => {
 
 // Middleware
 app.use(cors({
-  origin: [process.env.FRONTEND_URL, process.env.CLIENT_URL],
+  origin: [process.env.FRONTEND_URL, process.env.CLIENT_URL,'http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json());
@@ -52,13 +52,13 @@ import dashboardRoutes from "./routes/dashboard.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
-app.use("/api/departments", departmentRoutes);
-app.use("/api/attendance", attendanceRoutes);
-app.use("/api/leaves", leaveRoutes);
-app.use("/api/assets", assetRoutes);
-app.use("/api/performance", performanceRoutes);
-app.use("/api/salary", salaryRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/departments", departmentRoutes);
+app.use("/attendance", attendanceRoutes);
+app.use("/leaves", leaveRoutes);
+app.use("/assets", assetRoutes);
+app.use("/performance", performanceRoutes);
+app.use("/salary", salaryRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
