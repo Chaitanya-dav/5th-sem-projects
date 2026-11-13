@@ -308,3 +308,53 @@
   margin-bottom: 1rem;
   opacity: 0.5;
 }
+
+@media (max-width: 600px) {
+  .clock-section,
+  .attendance-section,
+  .stats-section {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .clock-card {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .record-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .date-picker {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .clock-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .clock-actions button {
+    width: 100%;
+  }
+
+  .attendance-table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .attendance-table {
+    min-width: 600px;
+  }
+
+  .attendance .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
